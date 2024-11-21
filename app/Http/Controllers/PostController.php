@@ -10,7 +10,7 @@ class PostController extends Controller
 {
     //一覧ページ
     public function index(){
-        $posts = Post::latest()->get();
+        $posts = Post::oldest('updated_at')->get();
         return view('posts.index',compact('posts'));
     }
 
@@ -21,8 +21,8 @@ class PostController extends Controller
 
     public function store(Request $request){
         $request->validate([
-            'title'=>'required',
-            'content'=>'required',
+            'title'=>'required|max:40',
+            'content'=>'required|max:200',
         ]);
         $post = new Post();//Postモデルをインスタンス化して新しいデータを取得する
         $post->title = $request->input('title');//フォームから送信された入力内容を各カラムに代入する
@@ -45,8 +45,8 @@ class PostController extends Controller
     //更新機能
     public function update(Request $request, Post $post){
         $request->validate([
-            'title'=>'required',
-            'content'=>'required',
+            'title'=>'required|max:40',
+            'content'=>'required|max:200',
         ]);
         $post->title= $request->input('title');
         $post->content=$request->input('content');
